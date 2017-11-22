@@ -106,11 +106,6 @@ This repository contains the configuration for kernel drivers that are required 
     ```
 5. Add the following lines to the `/boot/config.txt` file:
     ```
-    enable_uart=1
-    dtparam=i2c_arm=on
-	dtparam=i2c1=on
-	dtparam=i2c1_baudrate=1000000
-    dtoverlay=pi3-disable-bt
     dtparam=spi=on
     dtoverlay=spi1-1cs,cs0_spidev=off
     dtoverlay=mcp2515-can2-overlay,oscillator=16000000,interrupt=25
