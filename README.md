@@ -61,10 +61,9 @@ This repository contains the configuration for kernel drivers that are required 
 
 	Or alternatively to 1-3 add to `/etc/rc.local` the following lines:
 	```
-	chmod -R 0666 /sys/class/pwm/pwmchip0/*
+	sudo chmod -R 0666 /sys/class/pwm/pwmchip0/export
 	echo 0 > /sys/class/pwm/pwmchip0/export
 	echo 1 > /sys/class/pwm/pwmchip0/export
-	chmod -R 0666 /sys/class/pwm/pwmchip0/*
 	```
 
 4. Use pwm0.\
