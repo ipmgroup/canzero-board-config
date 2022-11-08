@@ -90,11 +90,9 @@ This repository contains the configuration for kernel drivers that are required 
  # CAN Bus #
  
  ## Configuration (kernel 5.15) ##
-    ``` 
     dtparam=spi=on 
     dtoverlay=spi1-1cs,cs0_spidev=off
-    dtoverlay=mcp2515,spi1-0,oscillator=16000000,interrupt=25
-    ``` 
+    dtoverlay=mcp2515,spi1-0,oscillator=16000000,interrupt=25   
  ## Configuration (both kernel 4.4 and 4.9) ##
  
 1. Install the device tree compiler:
