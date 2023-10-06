@@ -137,6 +137,7 @@ This repository contains the configuration for kernel drivers that are required 
 # I2C and Serial #
 
 ## Configuration (both kernel 4.4 and 4.9) ##
+## last kernel 6.1 use sudo raspi-config ##
 
 1. Add the following lines to the `/boot/config.txt` file:
     ```
