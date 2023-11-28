@@ -159,3 +159,12 @@ This repository contains the configuration for kernel drivers that are required 
     ```
     i2cdetect -y 1
     ```
+
+## build Ardupilot
+
+git clone --recurse-submodules https://github.com/karu2003/ardupilot
+
+cd ardupilot
+
+docker build . -t ardupilot
+
