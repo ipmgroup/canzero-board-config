@@ -166,5 +166,22 @@ git clone --recurse-submodules https://github.com/karu2003/ardupilot
 
 cd ardupilot
 
+git checkout docker_rpi
+
 docker build . -t ardupilot
 
+#### for Raspberry Pi 1, Zero
+
+docker build . -f Dockerfile_rpi1_zero -t ardupilot_rpi
+
+#### for Raspberry Pi 2, 3
+
+docker build . -f Dockerfile_rpi2_3 -t ardupilot_rpi
+
+#### for Raspberry Pi 3A+, 3B+, 4
+
+docker build . -f Dockerfile_rpi3b_4 -t ardupilot_rpi
+
+git checkout can-zero
+
+docker run --rm -it -v `pwd`:/ardupilot ardupilot_rpi:latest bash -c "./waf clean && ./waf configure --board=canzero --static && ./waf build"
