@@ -184,4 +184,4 @@ docker build . -f Dockerfile_rpi3b_4 -t ardupilot_rpi
 
 git checkout can-zero
 
-docker run --rm -it -v `pwd`:/ardupilot ardupilot_rpi:latest bash -c "./waf clean && ./waf configure --board=canzero --static && ./waf build"
+docker run --rm -it -v \`pwd\`:/ardupilot ardupilot_rpi:latest bash -c "./waf clean && ./waf configure --board=canzero --static && ./waf build"
