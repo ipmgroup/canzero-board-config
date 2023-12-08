@@ -162,7 +162,7 @@ This repository contains the configuration for kernel drivers that are required 
 
 ## build Ardupilot
 
-git clone --recurse-submodules https://github.com/karu2003/ardupilot
+git clone --recurse-submodules https://github.com/ArduPilot/ardupilot
 
 cd ardupilot
 
@@ -182,6 +182,6 @@ docker build . -f Dockerfile_rpi2_3 -t ardupilot_rpi
 
 docker build . -f Dockerfile_rpi3b_4 -t ardupilot_rpi
 
-git checkout can-zero
+git checkout master
 
 docker run --rm -it -v \`pwd\`:/ardupilot ardupilot_rpi:latest bash -c "./waf clean && ./waf configure --board=canzero --static && ./waf build"
