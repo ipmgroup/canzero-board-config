@@ -52,17 +52,20 @@ This repository contains the configuration for kernel drivers that are required 
     ```
     sudo reboot
     ```
+    
 ## Adding user to the right permission group - kernel 6.6
-    ```
+
     sudo nano /etc/udev/rules.d/99-com.rules
-    ```
-    Add the following lines:
-    ```
+
+    
+Add the following lines:
+    
+
     SUBSYSTEM=="pwm*", PROGRAM="/bin/sh -c '\
         chown -R root:gpio /sys/class/pwm && chmod -R 770 /sys/class/pwm;\
         chown -R root:gpio /sys/devices/platform/soc/*.pwm/pwm/pwmchip* && chmod -R 770 /sys/devices/platform/soc/*.pwm/pwm/pwmchip*\
     '"
-    ```
+
 
 ## Test the configuration for old kernel##
 
