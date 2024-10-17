@@ -62,6 +62,12 @@ class PWMController:
         except PermissionError:
             print(f"Permission denied: Unable to write to {self.pwm_path + 'enable'}. Try running the script with sudo.")
             sys.exit(1)
+        except OSError as e:
+            if e.errno == 22:
+                print(f"Invalid argument: Unable to write to {self.pwm_path + 'enable'}. Check the device state.")
+            else:
+                print(f"Unexpected error: {e}")
+            sys.exit(1)
 
 # Handle exit on key press
 def signal_handler(sig, frame):
