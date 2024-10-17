@@ -2,11 +2,6 @@ import time
 import sys
 import argparse
 import signal
-
-import time
-import sys
-import argparse
-import signal
 import os
 
 # Class to control PWM
@@ -67,6 +62,13 @@ class PWMController:
                 print(f"Invalid argument: Unable to write to {self.pwm_path + 'enable'}. Check the device state.")
             else:
                 print(f"Unexpected error: {e}")
+            sys.exit(1)
+        # Unexport the PWM channel
+        try:
+            with open(self.unexport_path, 'w') as f:
+                f.write(str(self.pwm_channel))
+        except Exception as e:
+            print(f"Failed to unexport PWM channel: {e}")
             sys.exit(1)
 
 # Handle exit on key press
