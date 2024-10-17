@@ -53,7 +53,7 @@ This repository contains the configuration for kernel drivers that are required 
     sudo reboot
     ```
     
-## Adding user to the right permission group - kernel 6.6
+## Adding user to the right permission group - kernel 6.6 ##
 
     sudo nano /etc/udev/rules.d/99-com.rules
 
@@ -67,7 +67,7 @@ Add the following lines:
     '"
 
 
-## Test the configuration for old kernel##
+## Test the configuration for old kernel ##
 
 1. Give every user access to the PWM controls:
     ```
