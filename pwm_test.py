@@ -3,6 +3,12 @@ import sys
 import argparse
 import signal
 
+import time
+import sys
+import argparse
+import signal
+import os
+
 # Class to control PWM
 class PWMController:
     def __init__(self, pwm_chip, pwm_channel, period_ms, duty_cycle_ms):
@@ -47,11 +53,11 @@ class PWMController:
 
     # Function to disable PWM
     def disable_pwm(self):
+        if not os.path.exists(self.pwm_path):
+            print(f"Error: Path {self.pwm_path} does not exist.")
+            sys.exit(1)
         with open(self.pwm_path + "enable", 'w') as f:
             f.write("0")
-        # Unexport the PWM channel
-        with open(self.unexport_path, 'w') as f:
-            f.write(str(self.pwm_channel))
 
 # Handle exit on key press
 def signal_handler(sig, frame):
