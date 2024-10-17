@@ -30,16 +30,16 @@ class PWMController:
             pass
 
         # Set the period
-        # subprocess.run(['echo', str(self.period_ns), '>', os.path.join(self.pwm_path, "period")], check=True, shell=True)
-        print('echo', str(int(self.period_ns)), '>', os.path.join(self.pwm_path, "period"))
+        subprocess.run(['echo', str(self.period_ns), '>', os.path.join(self.pwm_path, "period")], check=True, shell=True)
+        # print('echo', str(int(self.period_ns)), '>', os.path.join(self.pwm_path, "period"))
 
         # Set the duty cycle
-        # subprocess.run(['echo', str(self.duty_cycle_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
-        print('echo', str(int(self.duty_cycle_ns)), '>', os.path.join(self.pwm_path, "duty_cycle"))
+        subprocess.run(['echo', str(self.duty_cycle_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
+        # print('echo', str(int(self.duty_cycle_ns)), '>', os.path.join(self.pwm_path, "duty_cycle"))
 
         # Enable the PWM output
-        # subprocess.run(['echo', '1', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
-        print('echo', '1', '>', os.path.join(self.pwm_path, "enable"))
+        subprocess.run(['echo', '1', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
+        # print('echo', '1', '>', os.path.join(self.pwm_path, "enable"))
 
 
     # Function to change the duty cycle
