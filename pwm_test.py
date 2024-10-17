@@ -1,8 +1,7 @@
-import time
+import os
 import sys
 import argparse
 import signal
-import os
 
 # Class to control PWM
 class PWMController:
