@@ -4,6 +4,20 @@ This repository contains the configuration for kernel drivers that are required 
 
 # PWM #
 
+## Configuration for kernel 6.6 ##
+
+1. Add the following line to the `/boot/firmware/config.txt` file:
+    ```
+    sudo nano /boot/firmware/config.txt
+    ```
+    ```
+    dtoverlay=pwm-2chan,pin=12,func=4,pin2=13,func2=4
+    ```
+2. Restart the device:
+    ```
+    $ sudo reboot
+    ```
+
 ## Configuration for kernel 4.9 ##
 
 1. Add the following line to the `/boot/config.txt` file:
@@ -36,16 +50,26 @@ This repository contains the configuration for kernel drivers that are required 
     ```
 6. Restart the device:
     ```
-    $ sudo reboot
+    sudo reboot
+    ```
+## Adding user to the right permission group - kernel 6.6
+    ```
+    sudo nano /etc/udev/rules.d/99-com.rules
+    ```
+    Add the following lines:
+    ```
+    SUBSYSTEM=="pwm*", PROGRAM="/bin/sh -c '\
+        chown -R root:gpio /sys/class/pwm && chmod -R 770 /sys/class/pwm;\
+        chown -R root:gpio /sys/devices/platform/soc/*.pwm/pwm/pwmchip* && chmod -R 770 /sys/devices/platform/soc/*.pwm/pwm/pwmchip*\
+'"
     ```
 
-
-## Test the configuration ##
+## Test the configuration for old kernel##
 
 1. Give every user access to the PWM controls:
     ```
-    $ sudo chmod -R 0666 /sys/class/pwm/pwmchip0/export
-    $ sudo chmod -R 0666 /sys/class/pwm/pwmchip0/unexport
+    sudo chmod -R 0666 /sys/class/pwm/pwmchip0/export
+    sudo chmod -R 0666 /sys/class/pwm/pwmchip0/unexport
     ```
 
 2. Create pwm0 and pwm1:
@@ -85,6 +109,11 @@ This repository contains the configuration for kernel drivers that are required 
      ```
      echo 0 > /sys/class/pwm/pwmchip0/unexport
      ```
+## Test the configuration##
+     ```
+     pwm_test.py --chip 0 --channel 0 --period 20 --duty 1.5
+     ```
+
  
  # CAN Bus #
  
