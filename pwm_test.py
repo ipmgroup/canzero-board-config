@@ -56,8 +56,12 @@ class PWMController:
         if not os.path.exists(self.pwm_path):
             print(f"Error: Path {self.pwm_path} does not exist.")
             sys.exit(1)
-        with open(self.pwm_path + "enable", 'w') as f:
-            f.write("0")
+        try:
+            with open(self.pwm_path + "enable", 'w') as f:
+                f.write("0")
+        except PermissionError:
+            print(f"Permission denied: Unable to write to {self.pwm_path + 'enable'}. Try running the script with sudo.")
+            sys.exit(1)
 
 # Handle exit on key press
 def signal_handler(sig, frame):
