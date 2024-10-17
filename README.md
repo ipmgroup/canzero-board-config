@@ -113,9 +113,9 @@ Add the following lines:
      echo 0 > /sys/class/pwm/pwmchip0/unexport
      ```
 ## Test the configuration##
-     ```
+     
      pwm_test.py --chip 0 --channel 0 --period 20 --duty 1.5
-     ```
+     
 
  
  # CAN Bus #
