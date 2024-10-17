@@ -2,6 +2,9 @@ import os
 import sys
 import argparse
 import signal
+import subprocess
+import time
+
 
 # Class to control PWM
 class PWMController:
@@ -21,29 +24,24 @@ class PWMController:
     def setup_pwm(self):
         # Export the PWM channel if it is not already exported
         try:
-            with open(self.export_path, 'w') as f:
-                f.write(str(self.pwm_channel))
-        except FileExistsError:
+            subprocess.run(['echo', str(self.pwm_channel), '>', self.export_path], check=True, shell=True)
+        except subprocess.CalledProcessError:
             # PWM channel is already exported
             pass
 
         # Set the period
-        with open(self.pwm_path + "period", 'w') as f:
-            f.write(str(self.period_ns))
+        subprocess.run(['echo', str(self.period_ns), '>', os.path.join(self.pwm_path, "period")], check=True, shell=True)
 
         # Set the duty cycle
-        with open(self.pwm_path + "duty_cycle", 'w') as f:
-            f.write(str(self.duty_cycle_ns))
+        subprocess.run(['echo', str(self.duty_cycle_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
 
         # Enable the PWM output
-        with open(self.pwm_path + "enable", 'w') as f:
-            f.write("1")
+        subprocess.run(['echo', '1', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
 
     # Function to change the duty cycle
     def set_duty_cycle(self, duty_ms):
         duty_ns = duty_ms * 1_000_000  # Convert milliseconds to nanoseconds
-        with open(self.pwm_path + "duty_cycle", 'w') as f:
-            f.write(str(duty_ns))
+        subprocess.run(['echo', str(duty_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
 
     # Function to disable PWM
     def disable_pwm(self):
@@ -51,22 +49,17 @@ class PWMController:
             print(f"Error: Path {self.pwm_path} does not exist.")
             sys.exit(1)
         try:
-            with open(self.pwm_path + "enable", 'w') as f:
-                f.write("0")
-        except PermissionError:
-            print(f"Permission denied: Unable to write to {self.pwm_path + 'enable'}. Try running the script with sudo.")
-            sys.exit(1)
-        except OSError as e:
-            if e.errno == 22:
-                print(f"Invalid argument: Unable to write to {self.pwm_path + 'enable'}. Check the device state.")
+            subprocess.run(['echo', '0', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
+        except subprocess.CalledProcessError as e:
+            if e.returncode == 22:
+                print(f"Invalid argument: Unable to write to {os.path.join(self.pwm_path, 'enable')}. Check the device state.")
             else:
                 print(f"Unexpected error: {e}")
             sys.exit(1)
         # Unexport the PWM channel
         try:
-            with open(self.unexport_path, 'w') as f:
-                f.write(str(self.pwm_channel))
-        except Exception as e:
+            subprocess.run(['echo', str(self.pwm_channel), '>', self.unexport_path], check=True, shell=True)
+        except subprocess.CalledProcessError as e:
             print(f"Failed to unexport PWM channel: {e}")
             sys.exit(1)
 
