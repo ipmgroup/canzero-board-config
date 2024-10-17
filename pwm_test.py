@@ -1,10 +1,7 @@
-import os
+import time
 import sys
 import argparse
 import signal
-import subprocess
-import time
-
 
 # Class to control PWM
 class PWMController:
@@ -12,8 +9,8 @@ class PWMController:
         self.pwm_chip = pwm_chip
         self.pwm_channel = pwm_channel
         # Convert milliseconds to nanoseconds
-        self.period_ns = period_ms * 1_000_000
-        self.duty_cycle_ns = duty_cycle_ms * 1_000_000
+        self.period_ns = int(period_ms * 1_000_000)
+        self.duty_cycle_ns = int(duty_cycle_ms * 1_000_000)
 
         # Paths for the sysfs interface
         self.pwm_path = f"/sys/class/pwm/pwmchip{self.pwm_chip}/pwm{self.pwm_channel}/"
@@ -24,48 +21,37 @@ class PWMController:
     def setup_pwm(self):
         # Export the PWM channel if it is not already exported
         try:
-            subprocess.run(['echo', str(self.pwm_channel), '>', self.export_path], check=True, shell=True)
-        except subprocess.CalledProcessError:
+            with open(self.export_path, 'w') as f:
+                f.write(str(self.pwm_channel))
+        except (FileExistsError, OSError):
             # PWM channel is already exported
             pass
 
         # Set the period
-        subprocess.run(['echo', str(self.period_ns), '>', os.path.join(self.pwm_path, "period")], check=True, shell=True)
-        # print('echo', str(int(self.period_ns)), '>', os.path.join(self.pwm_path, "period"))
+        with open(self.pwm_path + "period", 'w') as f:
+            f.write(str(self.period_ns))
 
         # Set the duty cycle
-        subprocess.run(['echo', str(self.duty_cycle_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
-        # print('echo', str(int(self.duty_cycle_ns)), '>', os.path.join(self.pwm_path, "duty_cycle"))
+        with open(self.pwm_path + "duty_cycle", 'w') as f:
+            f.write(str(self.duty_cycle_ns))
 
         # Enable the PWM output
-        subprocess.run(['echo', '1', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
-        # print('echo', '1', '>', os.path.join(self.pwm_path, "enable"))
-
+        with open(self.pwm_path + "enable", 'w') as f:
+            f.write("1")
 
     # Function to change the duty cycle
     def set_duty_cycle(self, duty_ms):
         duty_ns = duty_ms * 1_000_000  # Convert milliseconds to nanoseconds
-        subprocess.run(['echo', str(duty_ns), '>', os.path.join(self.pwm_path, "duty_cycle")], check=True, shell=True)
+        with open(self.pwm_path + "duty_cycle", 'w') as f:
+            f.write(str(duty_ns))
 
     # Function to disable PWM
     def disable_pwm(self):
-        if not os.path.exists(self.pwm_path):
-            print(f"Error: Path {self.pwm_path} does not exist.")
-            sys.exit(1)
-        try:
-            subprocess.run(['echo', '0', '>', os.path.join(self.pwm_path, "enable")], check=True, shell=True)
-        except subprocess.CalledProcessError as e:
-            if e.returncode == 22:
-                print(f"Invalid argument: Unable to write to {os.path.join(self.pwm_path, 'enable')}. Check the device state.")
-            else:
-                print(f"Unexpected error: {e}")
-            sys.exit(1)
+        with open(self.pwm_path + "enable", 'w') as f:
+            f.write("0")
         # Unexport the PWM channel
-        try:
-            subprocess.run(['echo', str(self.pwm_channel), '>', self.unexport_path], check=True, shell=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to unexport PWM channel: {e}")
-            sys.exit(1)
+        with open(self.unexport_path, 'w') as f:
+            f.write(str(self.pwm_channel))
 
 # Handle exit on key press
 def signal_handler(sig, frame):
@@ -100,6 +86,7 @@ def main():
 
     except Exception as e:
         print(f"An error occurred: {e}", file=sys.stderr)
+        raise e
     finally:
         pwm_controller.disable_pwm()
         print("PWM disabled")

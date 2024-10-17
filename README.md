@@ -59,12 +59,11 @@ This repository contains the configuration for kernel drivers that are required 
 
     
 Add the following lines:
-    
+    ```
+    SUBSYSTEM=="pwm", ACTION!="remove", PROGRAM="/bin/sh -c 'echo 0 > /sys/class/pwm/pwmchip0/export'"
+    SUBSYSTEM=="pwm", ACTION!="remove", PROGRAM="/bin/sh -c 'echo 1 > /sys/class/pwm/pwmchip0/export'"
+    ```
 
-    SUBSYSTEM=="pwm*", PROGRAM="/bin/sh -c '\
-        chown -R root:gpio /sys/class/pwm && chmod -R 770 /sys/class/pwm;\
-        chown -R root:gpio /sys/devices/platform/soc/*.pwm/pwm/pwmchip* && chmod -R 770 /sys/devices/platform/soc/*.pwm/pwm/pwmchip*\
-    '"
 
 
 ## Test the configuration for old kernel ##
